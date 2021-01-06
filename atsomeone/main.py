@@ -28,11 +28,8 @@ logger.handlers = []
 logger.propagate = False
 logger.addHandler(dfhandler)
 
-initial_cogs = [
-    "thecog"
-]
-initial_extensions = [
-]
+initial_cogs = ["thecog"]
+initial_extensions = []
 
 discordplus.patch()
 
@@ -63,7 +60,7 @@ def main():
 
     launchtime = datetime.now()
 
-    bot = Bot(command_prefix = conf.prefix, allowed_mentions = discord.AllowedMentions(everyone=False), intents=discord.Intents.all())
+    bot = Bot(command_prefix = conf.prefix, intents=discord.Intents.all())
 
     for extension in initial_extensions:
         bot.load_extension("atsomeone.extensions." + extension)
