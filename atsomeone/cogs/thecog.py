@@ -5,7 +5,7 @@ from discord.ext import commands
 logger = logging.getLogger("at-someone")
 
 
-class AdminCog(commands.Cog):
+class TheCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -18,4 +18,4 @@ class AdminCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(AdminCog(bot))
+    bot.add_cog(TheCog(bot))
