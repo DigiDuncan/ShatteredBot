@@ -1,4 +1,4 @@
-from sizebot.discordplus import bot, command, embed, member, client, messageable, snowflake
+from atsomeone.discordplus import bot, command, embed, member, client, messageable, snowflake
 
 
 def patch():
