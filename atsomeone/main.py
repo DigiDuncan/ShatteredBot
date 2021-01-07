@@ -29,7 +29,7 @@ logger.handlers = []
 logger.propagate = False
 logger.addHandler(dfhandler)
 
-initial_cogs = ["thecog"]
+initial_cogs = ["admin", "thecog"]
 initial_extensions = []
 
 discordplus.patch()
