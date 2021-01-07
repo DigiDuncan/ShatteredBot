@@ -4,7 +4,7 @@ import logging
 
 from atsomeone.conf import conf
 
-logger = logging.getLogger("at-someone")
+logger = logging.getLogger("atsomeone")
 
 
 def dont_want_pings(u):
