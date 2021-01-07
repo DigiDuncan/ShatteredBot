@@ -17,6 +17,7 @@ from atsomeone.conf import conf
 from atsomeone.lib import paths
 from atsomeone.lib.loglevels import BANNER, LOGIN, CMD
 from atsomeone.lib.utils import truncate
+from atsomeone.plugins import pinglistener
 
 logging.basicConfig(level=CMD)
 dfhandler = digilogger.DigiFormatterHandler()
@@ -110,6 +111,8 @@ def main():
         message.content = message.content.replace("”", "\"")
         message.content = message.content.replace("’", "'")
         message.content = message.content.replace("‘", "'")
+
+        await pinglistener.on_ping(bot, message)
 
         await bot.process_commands(message)
 

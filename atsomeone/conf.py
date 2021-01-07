@@ -67,8 +67,9 @@ class Config(AttrDict):
 
 
 conf = Config([
-    ConfigField("prefix", "at-someone.prefix", default="@"),
+    ConfigField("prefix", "at-someone.prefix", default="%"),
     ConfigField("name", "at-someone.name", default="AtSomeone"),
-    ConfigField("activity", "sizebot.activity", default="the annoying game"),
+    ConfigField("activity", "at-someone.activity", default="the annoying game"),
+    ConfigField("blacklist_role", "at-someone.blacklist_role", default="scared of pings"),
     ConfigField("authtoken", "discord.authtoken", initdefault="INSERT_BOT_TOKEN_HERE")
 ])
