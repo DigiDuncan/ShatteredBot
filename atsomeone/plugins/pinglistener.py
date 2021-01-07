@@ -16,7 +16,10 @@ async def on_ping(bot, m):
     if m.author.bot:
         return
     if bot.user in m.mentions:
-        pingables = [u for u in m.guild.members if u.bot is False and not dont_want_pings(u)]
+        pingables = [u for u in m.guild.members if u.bot is False and not dont_want_pings(u) and u not in m.mentions]
         randomuser = random.choice(pingables)
         await m.channel.send(randomuser.mention)
         logger.info(f"Pinged {randomuser.display_name}, blame {m.author.display_name}.")
+        if randomuser == m.author:
+            await m.channel.send("Congratulations. You played yourself.")
+            logger.info("You played yourself.")
