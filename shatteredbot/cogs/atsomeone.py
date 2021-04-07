@@ -5,7 +5,7 @@ from discord.ext import commands
 logger = logging.getLogger("shatteredbot")
 
 
-class TheCog(commands.Cog):
+class ShatteredBotCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -18,4 +18,4 @@ class TheCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(TheCog(bot))
+    bot.add_cog(ShatteredBotCog(bot))
