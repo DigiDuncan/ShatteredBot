@@ -2,7 +2,7 @@ import logging
 
 from discord.ext import commands
 
-logger = logging.getLogger("at-someone")
+logger = logging.getLogger("shatteredbot")
 
 
 class AdminCog(commands.Cog):
