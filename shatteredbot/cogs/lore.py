@@ -1,19 +1,24 @@
 import logging
-from shatteredbot.lib.utils import truncate
+from collections import UserDict
 
 from discord.ext import commands
 from discord import Embed
 
+from shatteredbot.lib.utils import truncate
+
 logger = logging.getLogger("shatteredbot")
+
+SHATTERED_PURPLE = 0x4F23B4
 
 
 class LoreItem:
-    def __init__(self, title, description, *, fields = {}, image = None):
+    def __init__(self, title, description, *, fields = {}, image = None, color = SHATTERED_PURPLE):
         self.title = title
         self.key = title.casefold.replace(" ", "_")
         self.description = description
         self.fields = fields
         self.image = image
+        self.color = color
 
     @property
     def embed_length(self):
@@ -49,20 +54,18 @@ class LoreItem:
             e.add_field(name = t, value = d)
         if self.image is not None:
             e.set_image(self.image)
+        e.color = self.color
         return e
 
 
-class LoreBook:
-    def __init__(self, *, loreitems = {}):
-        self.loreitems = loreitems
-
+class LoreBook(UserDict):
     def add(self, loreitem: LoreItem):
-        if loreitem.key in self.loreitems:
+        if loreitem.key in self.data:
             raise ValueError("This lore item already exists in this lorebook!")
-        self.loreitems[loreitem.key] = loreitem
+        self.data[loreitem.key] = loreitem
 
     def remove(self, key):
-        if key not in self.loreitems:
+        if key not in self.data:
             raise ValueError("This lore item doesn't exist in this lorebook!")
 
 
