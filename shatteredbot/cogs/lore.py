@@ -74,8 +74,32 @@ class LoreCog(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def lore(self, ctx, subcommand, *, args):
-        subcommands = ["add", "delete", "edit", "read"]
+    async def lore(self, ctx, subcommand, name, *, args):
+        """
+        lore
+        ├── create
+        │   └── "<name>" [description...]
+        ├── delete
+        │   └── "<name>"
+        ├── read
+        │   └── "<name>"
+        ├── addfield
+        │   └── "<name>" "<fieldname>" [description...]
+        ├── removefield
+        │   └── "<name>" "<fieldname>"
+        └── edit
+            ├── name
+            │   └── "<oldname>" "<newname>"
+            ├── description
+            │   └── "<name>" <new description...>
+            ├── field
+            │   └── "<name>" "<fieldname>" <new description...>
+            ├── image
+            │   └── "<name>" <url...|remove>
+            └── color
+                └── "<name>" <color>
+        """
+        subcommands = ["create", "delete", "read", "addfield", "removefield", "edit"]
 
         if subcommand not in subcommands:
             await ctx.send(f"Invalid subcommand for `lore`: `{subcommand}`")
