@@ -18,7 +18,19 @@ class LoreItem:
         self.description = description
         self.fields = fields
         self.image = image
-        self.color = color
+        self._color = color
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        if isinstance(value, int):
+            self._color = value
+        elif isinstance(value, str):
+            value = value.removeprefix("#")
+            self._color = int(value, 16)
 
     @property
     def embed_length(self):
@@ -56,6 +68,25 @@ class LoreItem:
             e.set_image(self.image)
         e.color = self.color
         return e
+
+    def to_json(self):
+        {
+            "title": self.title,
+            "description": self.description,
+            "fields": self.fields,
+            "image": self.image,
+            "color": self._color
+        }
+
+    @classmethod
+    def from_json(cls, jsondata: dict) -> "LoreItem":
+        title = jsondata["title"]
+        desc = jsondata["description"]
+        fields = jsondata["fields"]
+        image = jsondata["image"]
+        color = jsondata["color"]
+
+        return LoreItem(title, description=desc, fields=fields, image=image, color=color)
 
 
 class LoreBook(UserDict):
