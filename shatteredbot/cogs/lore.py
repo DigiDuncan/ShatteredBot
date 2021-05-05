@@ -1,9 +1,14 @@
+import json
 import logging
 from collections import UserDict
+
+import toml
 
 from discord.ext import commands
 from discord import Embed
 
+from shatteredbot.lib import paths
+from shatteredbot.lib.pathdict import PathDict
 from shatteredbot.lib.utils import truncate
 
 logger = logging.getLogger("shatteredbot")
@@ -99,17 +104,35 @@ class LoreBook(UserDict):
         if key not in self.data:
             raise ValueError("This lore item doesn't exist in this lorebook!")
 
+    @classmethod
+    def load(cls):
+        try:
+            lorejson = PathDict(toml.load(paths.lorepath))
+            lorejson = json.load(lorejson)
+            return LoreBook(lorejson)
+        except FileNotFoundError:
+            logger.warn("Lore not found, creating blank lore...")
+            return LoreBook()
+
+    def save(self):
+        savepath = PathDict(toml.load(paths.lorepath))
+        with open(savepath) as f:
+            json.dump(self.data, f)
+
+
+book = LoreBook.load()
+
 
 class LoreCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.group()
     async def lore(self, ctx, subcommand, name, *, args):
         """
         lore
         ├── create
-        │   └── "<name>" [description...]
+        │   └── "<name>"
         ├── delete
         │   └── "<name>"
         ├── read
@@ -130,11 +153,47 @@ class LoreCog(commands.Cog):
             └── color
                 └── "<name>" <color>
         """
-        subcommands = ["create", "delete", "read", "addfield", "removefield", "edit"]
+        await ctx.send(self.lore.__doc__)
 
-        if subcommand not in subcommands:
-            await ctx.send(f"Invalid subcommand for `lore`: `{subcommand}`")
-            return
+    async def create(self, ctx, *, name):
+        """Create a new lore item."""
+        book.add(name)
+        await ctx.send(f"{name} added.")
+
+    async def delete(self, ctx, *, name):
+        """Delete a lore item."""
+        book.remove(name)
+        await ctx.send(f"{name} removed.")
+
+    async def read(self, ctx, *, name):
+        """Read a lore item."""
+        e = book[name].to_embed()
+        await ctx.send(embed = e)
+
+    @lore.group()
+    async def edit(self, ctx):
+        await ctx.send("Edit what? :sweat_smile:")
+
+    @edit.command()
+    async def name(self, ctx, oldname, newname):
+        book[oldname] = book[newname]
+        del book[oldname]
+        book.save()
+        await ctx.send(f"{oldname} is now called {newname}.")
+
+    @edit.command(
+        aliases = ["desc"]
+    )
+    async def description(self, ctx, name, *, value):
+        book[name].description = value
+        book.save()
+        await ctx.send(f"{name}'s description updated.")
+
+    @edit.command()
+    async def color(self, ctx, name, *, value):
+        book[name].color = value
+        book.save()
+        await ctx.send(f"{name}'s color updated.")
 
 
 def setup(bot):
