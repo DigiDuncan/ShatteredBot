@@ -17,9 +17,9 @@ SHATTERED_PURPLE = 0x4F23B4
 
 
 class LoreItem:
-    def __init__(self, title, description, *, fields = {}, image = None, color = SHATTERED_PURPLE):
+    def __init__(self, title, *, description = "", fields = {}, image = None, color = SHATTERED_PURPLE):
         self.title = title
-        self.key = title.casefold.replace(" ", "_")
+        self.key = title.casefold().replace(" ", "_")
         self.description = description
         self.fields = fields
         self.image = image
@@ -104,6 +104,14 @@ class LoreBook(UserDict):
         if key not in self.data:
             raise ValueError("This lore item doesn't exist in this lorebook!")
 
+    def __getitem__(self, key):
+        key = key.casefold().replace(" ", "_")
+        return self.data[key]
+
+    def __setitem__(self, key, item) -> None:
+        key = key.casefold().replace(" ", "_")
+        self.data[key] = item
+
     @classmethod
     def load(cls):
         try:
@@ -158,7 +166,7 @@ class LoreCog(commands.Cog):
     @lore.command()
     async def create(self, ctx, *, name):
         """Create a new lore item."""
-        book.add(name)
+        book.add(LoreItem(name))
         await ctx.send(f"{name} added.")
 
     @lore.command()
