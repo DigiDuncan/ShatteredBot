@@ -128,7 +128,7 @@ class LoreCog(commands.Cog):
         self.bot = bot
 
     @commands.group()
-    async def lore(self, ctx, subcommand, name, *, args):
+    async def lore(self, ctx):
         """
         lore
         ├── create
@@ -155,16 +155,19 @@ class LoreCog(commands.Cog):
         """
         await ctx.send(self.lore.__doc__)
 
+    @lore.command()
     async def create(self, ctx, *, name):
         """Create a new lore item."""
         book.add(name)
         await ctx.send(f"{name} added.")
 
+    @lore.command()
     async def delete(self, ctx, *, name):
         """Delete a lore item."""
         book.remove(name)
         await ctx.send(f"{name} removed.")
 
+    @lore.command()
     async def read(self, ctx, *, name):
         """Read a lore item."""
         e = book[name].to_embed()
