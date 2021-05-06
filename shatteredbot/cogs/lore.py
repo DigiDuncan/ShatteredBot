@@ -1,14 +1,13 @@
 import json
 import logging
 from collections import UserDict
-
-import toml
+from pathlib import Path
+from typing import Dict
 
 from discord.ext import commands
 from discord import Embed
 
 from shatteredbot.lib import paths
-from shatteredbot.lib.pathdict import PathDict
 from shatteredbot.lib.utils import truncate
 
 logger = logging.getLogger("shatteredbot")
@@ -47,6 +46,9 @@ class LoreItem:
     def description_chunks(self):
         chunks = []
         desc = self.description
+        if len(desc) == 0:
+            return [desc]
+
         while len(desc) > 0:
             chunks.append("..." + truncate(desc, 1000))
             desc = desc[1000:]
@@ -74,8 +76,8 @@ class LoreItem:
         e.color = self.color
         return e
 
-    def to_json(self):
-        {
+    def to_json(self) -> Dict:
+        return {
             "title": self.title,
             "description": self.description,
             "fields": self.fields,
@@ -113,19 +115,24 @@ class LoreBook(UserDict):
         self.data[key] = item
 
     @classmethod
+    def from_json(self, jsondata):
+        return LoreBook({k: LoreItem.from_json(i) for k, i in jsondata.items()})
+
+    @classmethod
     def load(cls):
         try:
-            lorejson = PathDict(toml.load(paths.lorepath))
-            lorejson = json.load(lorejson)
-            return LoreBook(lorejson)
+            lorepath = Path(paths.lorepath)
+            with open(lorepath, "r") as f:
+                lorejson = json.load(f)
+            return LoreBook.from_json(lorejson)
         except FileNotFoundError:
             logger.warn("Lore not found, creating blank lore...")
             return LoreBook()
 
     def save(self):
-        savepath = PathDict(toml.load(paths.lorepath))
-        with open(savepath) as f:
-            json.dump(self.data, f)
+        savepath = Path(paths.lorepath)
+        with open(savepath, "w") as f:
+            json.dump({k: i.to_json() for k, i in self.data.items()}, f)
 
 
 book = LoreBook.load()
@@ -161,18 +168,21 @@ class LoreCog(commands.Cog):
             └── color
                 └── "<name>" <color>
         """
-        await ctx.send(self.lore.__doc__)
+        if ctx.invoked_subcommand is None:
+            await ctx.send(self.lore.help)
 
     @lore.command()
     async def create(self, ctx, *, name):
         """Create a new lore item."""
         book.add(LoreItem(name))
+        book.save()
         await ctx.send(f"{name} added.")
 
     @lore.command()
     async def delete(self, ctx, *, name):
         """Delete a lore item."""
         book.remove(name)
+        book.save()
         await ctx.send(f"{name} removed.")
 
     @lore.command()
@@ -183,7 +193,8 @@ class LoreCog(commands.Cog):
 
     @lore.group()
     async def edit(self, ctx):
-        await ctx.send("Edit what? :sweat_smile:")
+        if ctx.invoked_subcommand is None:
+            await ctx.send("Edit what? :sweat_smile:")
 
     @edit.command()
     async def name(self, ctx, oldname, newname):
