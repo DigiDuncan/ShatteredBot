@@ -103,6 +103,7 @@ class LoreBook(UserDict):
         self.data[loreitem.key] = loreitem
 
     def remove(self, key):
+        key = key.casefold().replace(" ", "_")
         if key not in self.data:
             raise ValueError("This lore item doesn't exist in this lorebook!")
 
@@ -147,18 +148,18 @@ class LoreCog(commands.Cog):
         """
         lore
         ├── create
-        │   └── "<name>"
+        │   └── <name>
         ├── delete
-        │   └── "<name>"
+        │   └── <name>
         ├── read
-        │   └── "<name>"
+        │   └── <name>
         ├── addfield
         │   └── "<name>" "<fieldname>" [description...]
         ├── removefield
         │   └── "<name>" "<fieldname>"
         └── edit
             ├── name
-            │   └── "<oldname>" "<newname>"
+            │   └── "<oldname>" <newname>
             ├── description
             │   └── "<name>" <new description...>
             ├── field
@@ -174,22 +175,45 @@ class LoreCog(commands.Cog):
     @lore.command()
     async def create(self, ctx, *, name):
         """Create a new lore item."""
-        book.add(LoreItem(name))
+        try:
+            book.add(LoreItem(name))
+        except ValueError:
+            await ctx.send(f"Lore item {name} already in book!")
+            return
         book.save()
         await ctx.send(f"{name} added.")
 
     @lore.command()
     async def delete(self, ctx, *, name):
         """Delete a lore item."""
-        book.remove(name)
+        try:
+            book.remove(name)
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
         book.save()
         await ctx.send(f"{name} removed.")
 
     @lore.command()
     async def read(self, ctx, *, name):
         """Read a lore item."""
-        e = book[name].to_embed()
+        try:
+            e = book[name].to_embed()
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
         await ctx.send(embed = e)
+
+    @lore.command(
+        aliases = ["list"]
+    )
+    async def all(self, ctx):
+        """List all lore items."""
+        li = [i.title for i in book.values()]
+        await ctx.send(
+            "**Current Lore Entries**:\n"
+            f"{', '.join(li)}"
+        )
 
     @lore.group()
     async def edit(self, ctx):
@@ -198,7 +222,11 @@ class LoreCog(commands.Cog):
 
     @edit.command()
     async def name(self, ctx, oldname, newname):
-        book[oldname] = book[newname]
+        try:
+            book[oldname] = book[newname]
+        except KeyError:
+            await ctx.send(f"Lore item {oldname} not in the book!")
+            return
         del book[oldname]
         book.save()
         await ctx.send(f"{oldname} is now called {newname}.")
@@ -207,13 +235,21 @@ class LoreCog(commands.Cog):
         aliases = ["desc"]
     )
     async def description(self, ctx, name, *, value):
-        book[name].description = value
+        try:
+            book[name].description = value
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
         book.save()
         await ctx.send(f"{name}'s description updated.")
 
     @edit.command()
     async def color(self, ctx, name, *, value):
-        book[name].color = value
+        try:
+            book[name].color = value
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
         book.save()
         await ctx.send(f"{name}'s color updated.")
 
