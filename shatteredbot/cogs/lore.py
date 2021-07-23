@@ -16,6 +16,21 @@ SHATTERED_PURPLE = 0x4F23B4
 
 ok_roles = ["Owner And plant.", "Digimon"]
 
+user_help = """**Lore Help**
+`s!lore read <name>`: Reads the lore of that entry."""
+
+dm_help = user_help + """
+`s!lore create <name>`: Adds an entry to the book.
+`s!lore delete <name>`: Removes an entry from the book.
+`s!lore edit name "<oldname>" <newname>`: Changes the name of an entry.
+`s!lore edit description "<name>" <desc...>`: Changes the description of an entry.
+`s!lore edit field "name>" "<fieldname>" <desc...>`: Changes the description of an entry's field of the name ``fieldname`.
+`s!lore edit color "<name>" <color>`: Changes the color of an entry.
+`s!lore edit image "<name>" <url>`: Changes the image of an entry.
+`s!lore addfield "<name>" "<fieldname>" <desc...>`: Adds a field to an entry.
+`s!lore removefield "<name>" <fieldname>`: Removes a field from an entry.
+"""
+
 
 class LoreItem:
     def __init__(self, title, *, description = "", fields = {}, image = None, color = SHATTERED_PURPLE):
@@ -172,7 +187,10 @@ class LoreCog(commands.Cog):
                 └── "<name>" <color>
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send(self.lore.help)
+            if is_dm(ctx.author) is False:
+                await ctx.send(user_help)
+                return
+            await ctx.send(dm_help)
 
     @lore.command()
     async def create(self, ctx, *, name):
@@ -286,6 +304,14 @@ class LoreCog(commands.Cog):
             return
         await ctx.send(f"Field `{fieldname}` removed from item `{name}`.")
         book.save()
+
+    @commands.command()
+    async def help(self, ctx):
+        """Add a field to an item."""
+        if is_dm(ctx.author) is False:
+            await ctx.send(user_help)
+            return
+        await ctx.send(dm_help)
 
 
 def is_dm(user) -> bool:
