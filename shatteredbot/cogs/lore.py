@@ -182,10 +182,10 @@ class LoreCog(commands.Cog):
         try:
             book.add(LoreItem(name))
         except ValueError:
-            await ctx.send(f"Lore item {name} already in book!")
+            await ctx.send(f"Lore item `{name}` already in book!")
             return
         book.save()
-        await ctx.send(f"{name} added.")
+        await ctx.send(f"`{name}` added.")
 
     @lore.command()
     async def delete(self, ctx, *, name):
@@ -195,10 +195,10 @@ class LoreCog(commands.Cog):
         try:
             book.remove(name)
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         book.save()
-        await ctx.send(f"{name} removed.")
+        await ctx.send(f"`{name}` removed.")
 
     @lore.command()
     async def read(self, ctx, *, name):
@@ -206,7 +206,7 @@ class LoreCog(commands.Cog):
         try:
             e = book[name].to_embed()
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         await ctx.send(embed = e)
 
@@ -233,11 +233,11 @@ class LoreCog(commands.Cog):
         try:
             book[oldname] = book[newname]
         except KeyError:
-            await ctx.send(f"Lore item {oldname} not in the book!")
+            await ctx.send(f"Lore item `{oldname}` not in the book!")
             return
         del book[oldname]
         book.save()
-        await ctx.send(f"{oldname} is now called {newname}.")
+        await ctx.send(f"`{oldname}` is now called `{newname}`.")
 
     @edit.command(
         aliases = ["desc"]
@@ -249,17 +249,43 @@ class LoreCog(commands.Cog):
             await ctx.send(f"Lore item {name} not in the book!")
             return
         book.save()
-        await ctx.send(f"{name}'s description updated.")
+        await ctx.send(f"`{name}`'s description updated.")
 
     @edit.command()
     async def color(self, ctx, name, *, value):
         try:
             book[name].color = value
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         book.save()
-        await ctx.send(f"{name}'s color updated.")
+        await ctx.send(f"`{name}`'s color updated.")
+
+    @commands.command()
+    async def addfield(self, ctx, name, fieldname, *, desc):
+        """Add a field to an item."""
+        if is_dm(ctx.author) is False:
+            return
+        try:
+            book[name].add_field(fieldname, desc)
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
+        await ctx.send(f"Field `{fieldname}` added to item `{name}`.")
+        book.save()
+
+    @commands.command()
+    async def removefield(self, ctx, name, *, fieldname):
+        """Add a field to an item."""
+        if is_dm(ctx.author) is False:
+            return
+        try:
+            del book[name].fields[fieldname]
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
+        await ctx.send(f"Field `{fieldname}` removed from item `{name}`.")
+        book.save()
 
 
 def is_dm(user) -> bool:
