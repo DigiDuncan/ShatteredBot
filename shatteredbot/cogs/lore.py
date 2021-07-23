@@ -14,7 +14,7 @@ logger = logging.getLogger("shatteredbot")
 
 SHATTERED_PURPLE = 0x4F23B4
 
-ok_roles = ["Owner And plant.", "Digimon"]
+ok_roles = ["Owner And plant.", "Digimon", "TW"]
 
 user_help = """**Lore Help**
 `s!lore read <name>`: Reads the lore of that entry.
