@@ -262,6 +262,7 @@ class LoreCog(commands.Cog):
             await ctx.send(f"Lore item `{oldname}` not in the book!")
             return
         del book[oldname]
+        book[newname].title = newname
         book.save()
         await ctx.send(f"`{oldname}` is now called `{newname}`.")
 
