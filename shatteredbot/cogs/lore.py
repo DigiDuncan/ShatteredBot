@@ -14,6 +14,8 @@ logger = logging.getLogger("shatteredbot")
 
 SHATTERED_PURPLE = 0x4F23B4
 
+ok_roles = ["Owner And plant.", "Digimon"]
+
 
 class LoreItem:
     def __init__(self, title, *, description = "", fields = {}, image = None, color = SHATTERED_PURPLE):
@@ -175,6 +177,8 @@ class LoreCog(commands.Cog):
     @lore.command()
     async def create(self, ctx, *, name):
         """Create a new lore item."""
+        if is_dm(ctx.author) is False:
+            return
         try:
             book.add(LoreItem(name))
         except ValueError:
@@ -186,6 +190,8 @@ class LoreCog(commands.Cog):
     @lore.command()
     async def delete(self, ctx, *, name):
         """Delete a lore item."""
+        if is_dm(ctx.author) is False:
+            return
         try:
             book.remove(name)
         except KeyError:
@@ -217,6 +223,8 @@ class LoreCog(commands.Cog):
 
     @lore.group()
     async def edit(self, ctx):
+        if is_dm(ctx.author) is False:
+            return
         if ctx.invoked_subcommand is None:
             await ctx.send("Edit what? :sweat_smile:")
 
@@ -252,6 +260,13 @@ class LoreCog(commands.Cog):
             return
         book.save()
         await ctx.send(f"{name}'s color updated.")
+
+
+def is_dm(user) -> bool:
+    for role in ok_roles:
+        if role in user.rolelist:
+            return True
+    return False
 
 
 def setup(bot):
