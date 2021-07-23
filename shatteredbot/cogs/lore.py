@@ -17,7 +17,8 @@ SHATTERED_PURPLE = 0x4F23B4
 ok_roles = ["Owner And plant.", "Digimon"]
 
 user_help = """**Lore Help**
-`s!lore read <name>`: Reads the lore of that entry."""
+`s!lore read <name>`: Reads the lore of that entry.
+`s!lore all`: See a list of all entries."""
 
 dm_help = user_help + """
 `s!lore create <name>`: Adds an entry to the book.
@@ -253,6 +254,8 @@ class LoreCog(commands.Cog):
 
     @edit.command()
     async def name(self, ctx, oldname, newname):
+        if is_dm(ctx.author) is False:
+            return
         try:
             book[newname] = book[oldname]
         except KeyError:
@@ -266,6 +269,8 @@ class LoreCog(commands.Cog):
         aliases = ["desc"]
     )
     async def description(self, ctx, name, *, value):
+        if is_dm(ctx.author) is False:
+            return
         try:
             book[name].description = value
         except KeyError:
@@ -276,6 +281,8 @@ class LoreCog(commands.Cog):
 
     @edit.command()
     async def image(self, ctx, name, *, value):
+        if is_dm(ctx.author) is False:
+            return
         try:
             book[name].image = value
         except KeyError:
@@ -286,6 +293,8 @@ class LoreCog(commands.Cog):
 
     @edit.command()
     async def field(self, ctx, name, fieldname, *, value):
+        if is_dm(ctx.author) is False:
+            return
         try:
             book[name].fields[fieldname] = value
         except KeyError:
@@ -296,6 +305,8 @@ class LoreCog(commands.Cog):
 
     @edit.command()
     async def color(self, ctx, name, *, value):
+        if is_dm(ctx.author) is False:
+            return
         try:
             book[name].color = value
         except KeyError:
