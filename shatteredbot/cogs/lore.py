@@ -123,6 +123,7 @@ class LoreBook(UserDict):
         key = key.casefold().replace(" ", "_")
         if key not in self.data:
             raise ValueError("This lore item doesn't exist in this lorebook!")
+        del self.data[key]
 
     def __getitem__(self, key):
         key = key.casefold().replace(" ", "_")
@@ -192,7 +193,9 @@ class LoreCog(commands.Cog):
                 return
             await ctx.send(dm_help)
 
-    @lore.command()
+    @lore.command(
+        aliases = ["add"]
+    )
     async def create(self, ctx, *, name):
         """Create a new lore item."""
         if is_dm(ctx.author) is False:
@@ -205,7 +208,9 @@ class LoreCog(commands.Cog):
         book.save()
         await ctx.send(f"`{name}` added.")
 
-    @lore.command()
+    @lore.command(
+        aliases = ["remove"]
+    )
     async def delete(self, ctx, *, name):
         """Delete a lore item."""
         if is_dm(ctx.author) is False:
@@ -249,7 +254,7 @@ class LoreCog(commands.Cog):
     @edit.command()
     async def name(self, ctx, oldname, newname):
         try:
-            book[oldname] = book[newname]
+            book[newname] = book[oldname]
         except KeyError:
             await ctx.send(f"Lore item `{oldname}` not in the book!")
             return
@@ -270,6 +275,26 @@ class LoreCog(commands.Cog):
         await ctx.send(f"`{name}`'s description updated.")
 
     @edit.command()
+    async def image(self, ctx, name, *, value):
+        try:
+            book[name].image = value
+        except KeyError:
+            await ctx.send(f"Lore item {name} not in the book!")
+            return
+        book.save()
+        await ctx.send(f"`{name}`'s image updated.")
+
+    @edit.command()
+    async def field(self, ctx, name, fieldname, *, value):
+        try:
+            book[name].fields[fieldname] = value
+        except KeyError:
+            await ctx.send(f"Lore item {name} (or field name {fieldname}) not in the book!")
+            return
+        book.save()
+        await ctx.send(f"`{name}`'s field `{fieldname}` updated.")
+
+    @edit.command()
     async def color(self, ctx, name, *, value):
         try:
             book[name].color = value
@@ -279,7 +304,7 @@ class LoreCog(commands.Cog):
         book.save()
         await ctx.send(f"`{name}`'s color updated.")
 
-    @commands.command()
+    @lore.command()
     async def addfield(self, ctx, name, fieldname, *, desc):
         """Add a field to an item."""
         if is_dm(ctx.author) is False:
@@ -292,7 +317,7 @@ class LoreCog(commands.Cog):
         await ctx.send(f"Field `{fieldname}` added to item `{name}`.")
         book.save()
 
-    @commands.command()
+    @lore.command()
     async def removefield(self, ctx, name, *, fieldname):
         """Add a field to an item."""
         if is_dm(ctx.author) is False:
@@ -305,7 +330,7 @@ class LoreCog(commands.Cog):
         await ctx.send(f"Field `{fieldname}` removed from item `{name}`.")
         book.save()
 
-    @commands.command()
+    @lore.command()
     async def help(self, ctx):
         """Add a field to an item."""
         if is_dm(ctx.author) is False:
