@@ -89,7 +89,7 @@ class LoreItem:
         for t, d in self.fields.items():
             e.add_field(name = t, value = d)
         if self.image is not None:
-            e.set_image(self.image)
+            e.set_image(url=self.image)
         e.color = self.color
         return e
 
