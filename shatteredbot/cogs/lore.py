@@ -28,19 +28,29 @@ dm_help = user_help + """
 `s!lore edit field "name>" "<fieldname>" <desc...>`: Changes the description of an entry's field of the name ``fieldname`.
 `s!lore edit color "<name>" <color>`: Changes the color of an entry.
 `s!lore edit image "<name>" <url>`: Changes the image of an entry.
+`s!lore edit hidden "<name>" <y/n>`: Hides an entry.
 `s!lore addfield "<name>" "<fieldname>" <desc...>`: Adds a field to an entry.
 `s!lore removefield "<name>" <fieldname>`: Removes a field from an entry.
 """
 
 
 class LoreItem:
-    def __init__(self, title, *, description = "", fields = {}, image = None, color = SHATTERED_PURPLE):
-        self.title = title
+    def __init__(self, title, *, description = "", fields = {}, image = None, color = SHATTERED_PURPLE, hidden = False):
+        self._title = title
         self.key = title.casefold().replace(" ", "_")
         self.description = description
         self.fields = fields
         self.image = image
         self._color = color
+        self.hidden = hidden
+
+    @property
+    def title(self):
+        return self._title if not self.hidden else self._title + " 🔒"
+
+    @title.setter
+    def title(self, value):
+        self._title = value
 
     @property
     def color(self):
@@ -96,11 +106,12 @@ class LoreItem:
 
     def to_json(self) -> Dict:
         return {
-            "title": self.title,
+            "title": self._title,
             "description": self.description,
             "fields": self.fields,
             "image": self.image,
-            "color": self._color
+            "color": self._color,
+            "hidden": self.hidden
         }
 
     @classmethod
@@ -239,7 +250,7 @@ class LoreCog(commands.Cog):
     )
     async def all(self, ctx):
         """List all lore items."""
-        li = [i.title for i in book.values()]
+        li = [i.title for i in book.values() if i.hidden is False]
         await ctx.send(
             "**Current Lore Entries**:\n"
             f"{', '.join(li)}"
@@ -315,6 +326,18 @@ class LoreCog(commands.Cog):
             return
         book.save()
         await ctx.send(f"`{name}`'s color updated.")
+
+    @edit.command()
+    async def hidden(self, ctx, name, *, value: bool):
+        if is_dm(ctx.author) is False:
+            return
+        try:
+            book[name].hidden = value
+        except KeyError:
+            await ctx.send(f"Lore item `{name}` not in the book!")
+            return
+        book.save()
+        await ctx.send(f"`{name}`'s hidden status updated.")
 
     @lore.command()
     async def addfield(self, ctx, name, fieldname, *, desc):
