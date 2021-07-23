@@ -25,7 +25,7 @@ dm_help = user_help + """
 `s!lore delete <name>`: Removes an entry from the book.
 `s!lore edit name "<oldname>" <newname>`: Changes the name of an entry.
 `s!lore edit description "<name>" <desc...>`: Changes the description of an entry.
-`s!lore edit field "name>" "<fieldname>" <desc...>`: Changes the description of an entry's field of the name ``fieldname`.
+`s!lore edit field "name>" "<fieldname>" <desc...>`: Changes the description of an entry's field of the name `fieldname`.
 `s!lore edit color "<name>" <color>`: Changes the color of an entry.
 `s!lore edit image "<name>" <url>`: Changes the image of an entry.
 `s!lore edit hidden "<name>" <y/n>`: Hides an entry.
