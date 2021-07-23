@@ -269,7 +269,7 @@ class LoreCog(commands.Cog):
         try:
             book[name].description = value
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         book.save()
         await ctx.send(f"`{name}`'s description updated.")
@@ -279,7 +279,7 @@ class LoreCog(commands.Cog):
         try:
             book[name].image = value
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         book.save()
         await ctx.send(f"`{name}`'s image updated.")
@@ -289,7 +289,7 @@ class LoreCog(commands.Cog):
         try:
             book[name].fields[fieldname] = value
         except KeyError:
-            await ctx.send(f"Lore item {name} (or field name {fieldname}) not in the book!")
+            await ctx.send(f"Lore item `{name}` (or field name `{fieldname}`) not in the book!")
             return
         book.save()
         await ctx.send(f"`{name}`'s field `{fieldname}` updated.")
@@ -312,7 +312,7 @@ class LoreCog(commands.Cog):
         try:
             book[name].add_field(fieldname, desc)
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         await ctx.send(f"Field `{fieldname}` added to item `{name}`.")
         book.save()
@@ -325,7 +325,7 @@ class LoreCog(commands.Cog):
         try:
             del book[name].fields[fieldname]
         except KeyError:
-            await ctx.send(f"Lore item {name} not in the book!")
+            await ctx.send(f"Lore item `{name}` not in the book!")
             return
         await ctx.send(f"Field `{fieldname}` removed from item `{name}`.")
         book.save()
