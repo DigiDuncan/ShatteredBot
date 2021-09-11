@@ -60,7 +60,7 @@ class CharadesCog(commands.Cog):
         await ctx.send(f"Phrase `{phrase}` removed from the list!")
 
     @charades.command()
-    async def get(self, ctx, *, user: discord.Member):
+    async def get(self, ctx, *, user: discord.Member = None):
         p = random.choice(phrases.items)
         if user:
             if is_dm(ctx.author) is True:
