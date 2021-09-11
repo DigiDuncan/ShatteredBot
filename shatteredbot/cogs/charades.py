@@ -1,5 +1,6 @@
 import logging
 import random
+import discord
 
 from discord.ext import commands
 
@@ -59,8 +60,15 @@ class CharadesCog(commands.Cog):
         await ctx.send(f"Phrase `{phrase}` removed from the list!")
 
     @charades.command()
-    async def get(self, ctx):
+    async def get(self, ctx, *, user: discord.Member):
         p = random.choice(phrases.items)
+        if user:
+            if is_dm(ctx.author) is True:
+                await user.send(f"Your phrase is:\n> {p}")
+                return
+            else:
+                await ctx.send("Only admins can send charades to users other than them!")
+                return
         await ctx.message.author.send(f"Your phrase is:\n> {p}")
 
     @charades.command(
