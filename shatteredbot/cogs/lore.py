@@ -9,6 +9,7 @@ from discord import Embed
 
 from shatteredbot.lib import paths
 from shatteredbot.lib.utils import truncate
+from shatteredbot.lib.shatteredutils import is_dm
 
 logger = logging.getLogger("shatteredbot")
 
@@ -372,13 +373,6 @@ class LoreCog(commands.Cog):
             await ctx.send(user_help)
             return
         await ctx.send(dm_help)
-
-
-def is_dm(user) -> bool:
-    for role in ok_roles:
-        if role in user.rolelist:
-            return True
-    return False
 
 
 def setup(bot):
