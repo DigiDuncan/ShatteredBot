@@ -53,9 +53,8 @@ class FileList:
 class UniqueFileList(FileList):
     def append(self, i: str):
         icf = i.casefold().strip()
-        for item in self._items:
-            if item == icf:
-                raise ValueError(f"{i} is already in this list!")
+        if icf in self._items:
+            raise ValueError(f"{i} is already in this list!")
         super().append(i)
 
     def remove(self, i: str):
