@@ -42,7 +42,7 @@ passes = [
 ]
 
 
-class DumbCog(commands.Cog):
+class GeneratorCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -57,4 +57,4 @@ class DumbCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(DumbCog(bot))
+    bot.add_cog(GeneratorCog(bot))
