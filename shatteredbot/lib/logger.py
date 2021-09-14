@@ -14,7 +14,7 @@ def init_logging():
     dfhandler = digilogger.DigiFormatterHandler()
     dfhandler.setLevel(CMD)
 
-    logger = logging.getLogger("schedulebot")
+    logger = logging.getLogger("shatteredbot")
     logger.setLevel(CMD)
     logger.handlers = []
     logger.propagate = False
