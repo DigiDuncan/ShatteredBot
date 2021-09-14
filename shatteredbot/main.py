@@ -10,7 +10,6 @@ import discordn
 
 from shatteredbot import __version__
 from shatteredbot.conf import ConfLoadException, conf, load_conf
-from shatteredbot.lib import db
 from shatteredbot.lib.logger import init_logging, BANNER, CMD, LOGIN
 from shatteredbot.lib.utils import truncate
 
@@ -52,8 +51,6 @@ def main():
         load_conf()
     except ConfLoadException:
         return
-
-    db.init()
 
     extensions = []
     cogs = ["admin", "atsomeone", "lore", "generator", "charades", "etc"]
