@@ -1,14 +1,24 @@
+import logging
+import importlib.resources as pkg_resources
+import os
+from pathlib import Path
 import toml
 
+import shatteredbot.data
 from shatteredbot.lib import paths
 from shatteredbot.lib.attrdict import AttrDict
 from shatteredbot.lib.pathdict import PathDict
 
+logger = logging.getLogger("shatteredbot")
 
 SENTINEL = object()
 
 
 class ConfigError(Exception):
+    pass
+
+
+class ConfLoadException(Exception):
     pass
 
 
@@ -43,10 +53,7 @@ class Config(AttrDict):
         super(AttrDict, self).__setattr__("_fields", fields)
 
     def load(self):
-        try:
-            configDict = PathDict(toml.load(paths.confpath))
-        except FileNotFoundError as e:
-            raise ConfigError(f"Configuration file not found: {e.filename}")
+        configDict = PathDict(toml.load(paths.confpath))
 
         try:
             for f in self._fields:
@@ -67,9 +74,24 @@ class Config(AttrDict):
 
 
 conf = Config([
-    ConfigField("prefix", "shatteredbot.prefix", default="s!"),
-    ConfigField("name", "shatteredbot.name", default="ShatteredBot"),
-    ConfigField("activity", "shatteredbot.activity", default="traversing realities"),
-    ConfigField("blacklist_role", "shatteredbot.blacklist_role", default="scared of pings"),
+    ConfigField("prefix", "shatteredbot.prefix", default="?"),
+    ConfigField("name", "shatteredbot.name", default="The Librarian"),
+    ConfigField("activity", "shatteredbot.activity", default="with realities"),
     ConfigField("authtoken", "discord.authtoken", initdefault="INSERT_BOT_TOKEN_HERE")
 ])
+
+
+def load_conf() -> None:
+    try:
+        conf.load()
+    except FileNotFoundError as e:
+        logger.error(f"Configuration file not found: {e.filename}")
+        confpath = Path(e.filename)
+        logger.warn("Writing default settings file...")
+        default_settings = pkg_resources.read_text(shatteredbot.data, "settings.ini")
+        confpath.parent.mkdir(parents = True, exist_ok = True)
+        with open(confpath, "w") as f:
+            f.write(default_settings)
+        os.startfile(confpath.parent)
+        logger.info("Please reload the bot.")
+        raise ConfLoadException()
