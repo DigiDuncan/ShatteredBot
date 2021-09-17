@@ -15,3 +15,4 @@ datadir = getDataDir()
 confpath = datadir / "shatteredbot.conf"
 lorepath = datadir / "lore.json"
 charadespath = datadir / "charades.txt"
+quotespath = datadir / "quotes.json"
