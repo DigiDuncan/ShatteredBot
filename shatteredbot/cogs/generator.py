@@ -21,7 +21,16 @@ battles = [
     "dispute",
     "strife",
     "contention",
-    "attack"
+    "attack",
+    "encounter",
+    "tussle",
+    "melee",
+    "warfare",
+    "hostility",
+    "competition",
+    "toil",
+    "rainbow 🌈",
+    "la lucha"
 ]
 
 passes = [
@@ -38,7 +47,11 @@ passes = [
     "warrant",
     "authentication",
     "go-ahead",
-    "document"
+    "document",
+    "bus pass",
+    "rainbow 🌈",
+    "admission",
+    "permiso"
 ]
 
 
