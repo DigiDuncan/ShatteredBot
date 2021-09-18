@@ -20,7 +20,7 @@ discordn.patch()
 logger = logging.getLogger(__package__)
 
 
-class ScheduleBot(Bot):
+class ShatteredBot(Bot):
     async def on_first_ready(self):
         await super().on_first_ready()
 
@@ -62,7 +62,7 @@ def main():
     if sys.gettrace() is not None:
         activity = discord.Activity(type=discord.ActivityType.listening, name = "DEBUGGER 🔧")
 
-    bot = ScheduleBot(command_prefix = conf.prefix, extensions=extension_paths, username=conf.name, activity=activity)
+    bot = ShatteredBot(command_prefix = conf.prefix, extensions=extension_paths, username=conf.name, activity=activity)
 
     if not conf.authtoken:
         logger.error("Authentication token not found!")

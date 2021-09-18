@@ -9,17 +9,19 @@ import arrow
 import discord
 
 from discord.ext import commands
+from shatteredbot import conf
 from shatteredbot.lib.utils import sentence_join
 from shatteredbot.lib import paths
 
 logger = logging.getLogger("shatteredbot")
 
-RE_QUOTE = re.compile(r"(?P<quote>(?:>\s.*?\n)+)<@!?\d+\>(?P<customauthor>.*)", re.DOTALL)
+RE_QUOTE = re.compile(r"(?s)(?P<quote>(?:>\s.*?\n)+)(?:<@!?\d+\>\s?)*(?P<customauthor>.*)", re.DOTALL)
 
 quote_help = """**`?quote` Help**
-`?quote <num>`: Pull up a quote by ID.
+`?quote read <num>`: Pull up a quote by ID.
 `?quote author @User`: Pull up a quote by a user.
 `?quote random`: Pull up a random quote.
+`?quote name <@user> <name>`: Assign a canon name.
 
 **Adding A Quote**
 *Normal*
@@ -34,7 +36,7 @@ becomes...
 
 *Advanced*
 ```
-? quote add
+?quote add
 > Digi: "Look at this, Tris!"
 > Tris: "I do not care. :whyareyoualllikethis:"
 @DigiDuncan @Triston Digi and Tris, working on anything
@@ -69,6 +71,13 @@ class QuoteDB:
     @property
     def nextQID(self):
         return max(q.qid for q in self.quotes) + 1
+
+    def add_quote(self, text: str, authors: list[int], custom_author: str = None):
+        new_qid = self.nextQID
+        self.quotes.append(
+            Quote(new_qid, text, authors, custom_author = custom_author)
+        )
+        self.save()
 
     @classmethod
     def from_JSON(cls, jsondata):
@@ -135,12 +144,14 @@ class QuoteCog(commands.Cog):
         self.bot = bot
 
     @commands.group()
-    async def quote(self, ctx, num: int):
-        if ctx.invoked_subcommand is None and num is None:
+    async def quote(self, ctx):
+        if ctx.invoked_subcommand is None:
             await ctx.send(quote_help)
-        else:
-            q = quotedb.get_quote_by_ID(num)
-            await ctx.send(embed = q.to_embed())
+
+    @quote.command()
+    async def read(self, ctx, num: int):
+        q = quotedb.get_quote_by_ID(num)
+        await ctx.send(embed = q.to_embed())
 
     @quote.command()
     async def random(self, ctx):
@@ -151,6 +162,51 @@ class QuoteCog(commands.Cog):
     async def author(self, ctx, author: discord.Member):
         q = quotedb.get_quotes_by_author(author.id)
         await ctx.send(embed = q.to_embed())
+
+    @quote.command(
+        multiline = True
+    )
+    async def add(self, ctx, *, quote):
+        if m := re.search(RE_QUOTE, quote):
+            text = m.group("text")
+            custom_author = m.group("customauthor")
+        else:
+            await ctx.send("This quote is incorrectly formatted! See the help for info.")
+            return
+
+        textlines = text.splitlines()
+        for line in textlines:
+            line.removeprefix(">")
+            line = line.strip()
+        text = "\n".join(textlines)
+
+        if custom_author.strip() == "":
+            custom_author = None
+
+        authors = [m.id for m in ctx.message.mentions]
+
+        quotedb.add_quote(text, authors, custom_author)
+
+        for author in authors:
+            if author not in quotedb.usermap:
+                await ctx.send(f"<@!{author}> does not have a canon name! Please run `{conf.prefix}quote name <@!{author}> <name>` to assign them one.")
+
+    @quote.command()
+    async def name(self, ctx, user: discord.Member, *, name):
+        if user.id in quotedb.usermap:
+            await ctx.send("That user already has a canon name.")
+            return
+        else:
+            quotedb.usermap[user.id] = name
+            await ctx.send(f"Name \"{name}\" assigned.")
+
+    @quote.command()
+    async def help(self, ctx):
+        await ctx.send(quote_help)
+
+    @commands.command()
+    async def qoute(self, ctx):
+        await ctx.send("Come on man, it's not that hard.")
 
 
 def setup(bot):
