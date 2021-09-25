@@ -4,6 +4,8 @@ import random
 from discord.ext import commands
 
 logger = logging.getLogger("shatteredbot")
+papyrus_url = "https://www.demirramon.com/gen/undertale_text_box.png?text={prefix}color%3Dorange%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-papyrus&expression=cool&charcolor=ffffff&font=papyrus&asterisk=null&mode=regular"
+sans_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=You%20feel%20like%20you%27re%20going%20to%20have%20a%20color%3Dblue%20{replace}.&box=undertale&boxcolor=ffffff&character=undertale-sans&expression=blue-eye&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
 
 battles = [
     "battle",
@@ -87,7 +89,9 @@ bads = [
     "faulty",
     "not good",
     "incorrect",
-    "shitty"
+    "shitty",
+    "fucky",
+    "horrible"
 ]
 
 times = [
@@ -121,7 +125,8 @@ times = [
     "ceremony",
     "development",
     "mishap",
-    "phenomenon"
+    "phenomenon",
+    "life"
 ]
 
 
@@ -149,9 +154,34 @@ class GeneratorCog(commands.Cog):
         badtime = random.choice(bads) + " " + random.choice(times)
         badtime = badtime.lower()
         if badtime == "bad time":
-            await ctx.send("hey there buddy chum pal friend buddy pal chum bud friend fella brother amigo pal buddy friend chummy chum chum pal i dont mean to be rude my friend pal home slice bread slice dawg but i gotta warn ya if u take one more diddly darn step right there im gonna have to diddly darn snap ur neck and wowza wouldnt that be a crummy juncture huh do u want that do u wish upon yourself to come into physical experience with a crummy juncture because friend buddy chum friend chum pally pal chum friend if u keep this up well gosh diddly darn i just might have to get not so friendly with you my friendly friend friend pal friend buddy chum pally friend chum buddy")
+            await ctx.send("https://cdn.discordapp.com/attachments/412692184182161414/891054485579890708/undertale_box_stack.png")
             return
-        await ctx.send(f"You feel like you're going to have a **{badtime}**.")
+        url = sans_url.format(replace = badtime).replace(" ", "%20").replace("'", "%27")
+        await ctx.send(url)
+
+    @commands.command(
+        hidden = True
+    )
+    async def badpass(self, ctx):
+        badpass = random.choice(bads) + " " + random.choice(passes)
+        badpass = badpass.upper()
+        custom = badpass
+        prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
+        prefix = random.choice(prefixes)
+        url = papyrus_url.format(prefix = prefix, replace = custom).replace(" ", "%20").replace("'", "%27")
+        await ctx.send(url)
+
+    @commands.command(
+        hidden = True
+    )
+    async def battletime(self, ctx):
+        battletime = random.choice(battles) + " " + random.choice(times)
+        battletime = battletime.upper()
+        custom = battletime
+        prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
+        prefix = random.choice(prefixes)
+        url = papyrus_url.format(prefix = prefix, replace = custom).replace(" ", "%20").replace("'", "%27")
+        await ctx.send(url)
 
 
 def setup(bot):
