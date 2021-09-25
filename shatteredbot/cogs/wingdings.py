@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 
 english = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvqxyz1234567890,./?!-=_+;:'*"
-wingdings = "✌👌👍👎☜☞☝☟✋☺😐☹💣☠⚐🏱✈☼💧❄🕆✞🕈✠✡☪♋♌♍♎♏♐♑♒♓j&●❍■□◻❑❒⬧⧫◆❖❑⌧⍓⌘📂📄🗏🗐🗄⌛🖮🖰🖲📁📪📬📭✍✏📫🖬♉🖃🖴🖳🕯🖂"
+wingdings = "✌👌👍👎☜☞☝☟✋☺😐☹💣☠⚐🏱✈☼💧❄🕆✞🕈✠✡☪♋♌♍♎♏♐♑♒♓j\U0001F675●❍■□◻❑❒⬧⧫◆❖❑⌧⍓⌘📂📄🗏🗐🗄⌛🖮🖰🖲📁📪📬📭✍✏📫🖬♉🖃🖴🖳🕯🖂"
 
 logger = logging.getLogger("shatteredbot")
 
@@ -27,7 +27,7 @@ class WingdingsCog(commands.Cog):
                 out += wingdings[i]
             else:
                 out += c
-        await ctx.send(f"`{out}`")
+        await ctx.send(out)
 
     @commands.command(
         usage = "<message...>"
@@ -43,7 +43,7 @@ class WingdingsCog(commands.Cog):
                 out += wingdings[i]
             else:
                 out += c
-        await ctx.send(f"`{out}`")
+        await ctx.send(out)
 
     @commands.command(
         usage = "<message...>"
