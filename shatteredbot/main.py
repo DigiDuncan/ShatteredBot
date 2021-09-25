@@ -53,7 +53,7 @@ def main():
         return
 
     extensions = []
-    cogs = ["admin", "atsomeone", "lore", "generator", "charades", "etc", "quote"]
+    cogs = ["admin", "atsomeone", "lore", "generator", "charades", "etc", "quote", "wingdings"]
     extension_paths = [f"{__package__}.cogs.{c}" for c in cogs] + [f"{__package__}.extension.{e}" for e in extensions]
 
     # Add a special message to bot status if we are running in debug mode
