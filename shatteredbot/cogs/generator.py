@@ -163,7 +163,7 @@ class GeneratorCog(commands.Cog):
         hidden = True
     )
     async def badpass(self, ctx):
-        badpass = random.choice(bads) + " " + random.choice(passes)
+        badpass = random.choice(bads + [""]) + " " + random.choice(passes + [""])
         badpass = badpass.upper()
         custom = badpass
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
@@ -175,7 +175,7 @@ class GeneratorCog(commands.Cog):
         hidden = True
     )
     async def battletime(self, ctx):
-        battletime = random.choice(battles) + " " + random.choice(times)
+        battletime = random.choice(battles + [""]) + " " + random.choice(times + [""])
         battletime = battletime.upper()
         custom = battletime
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
