@@ -19,6 +19,15 @@ class AdminCog(commands.Cog):
         await ctx.send("Stopping ShatteredBot. ☠️")
         await ctx.bot.close()
 
+    @commands.command(
+        hidden = True
+    )
+    @commands.is_owner()
+    async def say(self, ctx, *, string):
+        """Say."""
+        await ctx.message.delete()
+        await ctx.send(string)
+
 
 def setup(bot):
     bot.add_cog(AdminCog(bot))
