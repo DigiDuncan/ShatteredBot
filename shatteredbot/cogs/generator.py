@@ -1,5 +1,6 @@
 import logging
 import random
+from urllib.parse import quote_plus
 
 from discord.ext import commands
 
@@ -156,7 +157,7 @@ class GeneratorCog(commands.Cog):
         if badtime == "bad time":
             await ctx.send("https://cdn.discordapp.com/attachments/412692184182161414/891054485579890708/undertale_box_stack.png")
             return
-        url = sans_url.format(replace = badtime).replace(" ", "%20").replace("'", "%27")
+        url = quote_plus(sans_url.format(replace = badtime))
         await ctx.send(url)
 
     @commands.command(
@@ -168,7 +169,7 @@ class GeneratorCog(commands.Cog):
         custom = badpass
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
-        url = papyrus_url.format(prefix = prefix, replace = custom).replace(" ", "%20").replace("'", "%27")
+        url = quote_plus(papyrus_url.format(prefix = prefix, replace = custom))
         await ctx.send(url)
 
     @commands.command(
@@ -180,7 +181,7 @@ class GeneratorCog(commands.Cog):
         custom = battletime
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
-        url = papyrus_url.format(prefix = prefix, replace = custom).replace(" ", "%20").replace("'", "%27")
+        url = quote_plus(papyrus_url.format(prefix = prefix, replace = custom))
         await ctx.send(url)
 
 
