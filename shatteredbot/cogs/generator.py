@@ -1,7 +1,9 @@
+import io
 import logging
 import random
-from urllib.parse import quote_plus
+import requests
 
+import discord
 from discord.ext import commands
 
 logger = logging.getLogger("shatteredbot")
@@ -131,6 +133,11 @@ times = [
 ]
 
 
+def get_image(url):
+    response = requests.get(url)
+    return io.BytesIO(response.content)
+
+
 class GeneratorCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -157,8 +164,9 @@ class GeneratorCog(commands.Cog):
         if badtime == "bad time":
             await ctx.send("https://cdn.discordapp.com/attachments/412692184182161414/891054485579890708/undertale_box_stack.png")
             return
-        url = quote_plus(sans_url.format(replace = badtime))
-        await ctx.send(url)
+        url = sans_url.format(replace = badtime)
+        image = get_image(url)
+        await ctx.send("", file = discord.File(image, filename = "badtime.png"))
 
     @commands.command(
         hidden = True
@@ -169,8 +177,9 @@ class GeneratorCog(commands.Cog):
         custom = badpass
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
-        url = quote_plus(papyrus_url.format(prefix = prefix, replace = custom))
-        await ctx.send(url)
+        url = papyrus_url.format(prefix = prefix, replace = custom)
+        image = get_image(url)
+        await ctx.send("", file = discord.File(image, filename = "badpass.png"))
 
     @commands.command(
         hidden = True
@@ -181,8 +190,9 @@ class GeneratorCog(commands.Cog):
         custom = battletime
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
-        url = quote_plus(papyrus_url.format(prefix = prefix, replace = custom))
-        await ctx.send(url)
+        url = papyrus_url.format(prefix = prefix, replace = custom)
+        image = get_image(url)
+        await ctx.send("", file = discord.File(image, filename = "battletime.png"))
 
 
 def setup(bot):
