@@ -57,3 +57,73 @@ milk
 bread
 feet
 microphone
+peanut butter
+fork
+scissors
+duck tape
+glove
+gauntlet
+toilet
+controller
+shoe
+pen
+stick
+face
+car
+boat
+code
+book
+keyboard
+guitar
+train
+pants
+cannon
+tear gas
+boomerang
+bow
+bazooka
+musket
+hydrogen bomb
+neutrino bomb
+ram
+battering ram
+shrapnel
+saber
+box cutter
+super glue
+nerf gun
+story
+dorked
+chili dog
+ocarina
+nintendo switch
+broom
+potato
+spike
+bear trap
+dart
+destroyer
+creator
+summoner
+wrangler
+food
+drink
+potion
+arrow
+dog
+cat
+hot glue gun
+box
+soldier
+joe biden
+barack
+dumbachu
+pokemon
+the librarian
+socks
+thigh highs
+sword...?
+gun...?
+hammer...?
+axe...?
+potion...?

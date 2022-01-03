@@ -93,7 +93,7 @@ class GeneratorCog(commands.Cog):
         spear = spear.upper()
         url = undyne_url.format(replace = spear)
         image = get_image(url)
-        await ctx.send("", file = discord.File(image, filename = "battletime.png"))
+        await ctx.send("", file = discord.File(image, filename = "spear.png"))
 
 
 def setup(bot):
