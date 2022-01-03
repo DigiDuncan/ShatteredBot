@@ -6,131 +6,19 @@ import requests
 import discord
 from discord.ext import commands
 
+from shatteredbot.lib.wordlist import get_wordlist
+
 logger = logging.getLogger("shatteredbot")
 papyrus_url = "https://www.demirramon.com/gen/undertale_text_box.png?text={prefix}color%3Dorange%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-papyrus&expression=cool&charcolor=ffffff&font=papyrus&asterisk=null&mode=regular"
 sans_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=You%20feel%20like%20you%27re%20going%20to%20have%20a%20color%3Dblue%20{replace}.&box=undertale&boxcolor=ffffff&character=undertale-sans&expression=blue-eye&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
+undyne_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=BEHOLD%2C%20THE%20color=green%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-undyne&expression=funny&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
 
-battles = [
-    "battle",
-    "fight",
-    "altercation",
-    "confrontation",
-    "scuffle",
-    "combat",
-    "conflict",
-    "skirmish",
-    "struggle",
-    "war",
-    "feud",
-    "crusade",
-    "dispute",
-    "strife",
-    "contention",
-    "attack",
-    "encounter",
-    "tussle",
-    "melee",
-    "warfare",
-    "hostility",
-    "competition",
-    "toil",
-    "rainbow 🌈",
-    "la lucha"
-]
-
-passes = [
-    "pass",
-    "ticket",
-    "license",
-    "passport",
-    "permit",
-    "visa",
-    "warrant",
-    "certificate",
-    "coupon",
-    "voucher",
-    "warrant",
-    "authentication",
-    "go-ahead",
-    "document",
-    "bus pass",
-    "rainbow 🌈",
-    "admission",
-    "permiso"
-]
-
-bads = [
-    "bad",
-    "awful",
-    "crummy",
-    "unfortunate",
-    "terrible",
-    "sub-standard",
-    "poor",
-    "inferior",
-    "unpleasant",
-    "disagreeable",
-    "unfavorable",
-    "nasty",
-    "dreadful",
-    "grim",
-    "distressing",
-    "regrettable",
-    "unsatisfactory",
-    "atrocious",
-    "lousy",
-    "rough",
-    "sad",
-    "blah",
-    "unacceptable",
-    "garbage",
-    "junky",
-    "abominable",
-    "crappy",
-    "cruddy",
-    "defective",
-    "faulty",
-    "not good",
-    "incorrect",
-    "shitty",
-    "fucky",
-    "horrible"
-]
-
-times = [
-    "time",
-    "experience",
-    "juncture",
-    "moment",
-    "date",
-    "hour",
-    "minute",
-    "week",
-    "day",
-    "present",
-    "duration",
-    "occasion",
-    "incident",
-    "occurrence",
-    "circumstance",
-    "existence",
-    "situation",
-    "condition",
-    "transaction",
-    "accident",
-    "instance",
-    "affair",
-    "adventure",
-    "coincidence",
-    "event",
-    "fate",
-    "happening",
-    "ceremony",
-    "development",
-    "mishap",
-    "phenomenon",
-    "life"
-]
+bads = get_wordlist("bad")
+times = get_wordlist("time")
+battles = get_wordlist("battle")
+passes = get_wordlist("pass")
+weapons = get_wordlist("weapon")
+descriptions = get_wordlist("description")
 
 
 def get_image(url):
@@ -191,6 +79,19 @@ class GeneratorCog(commands.Cog):
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
         url = papyrus_url.format(prefix = prefix, replace = custom)
+        image = get_image(url)
+        await ctx.send("", file = discord.File(image, filename = "battletime.png"))
+
+    @commands.command(
+        aliases = ["weapon", "spear"]
+    )
+    async def spearofjustice(self, ctx, *, choice = ""):
+        if choice == "count":
+            await ctx.send(f"There are **{len(weapons) * len(descriptions)}** ways to say \"Spear of Justice\".")
+            return
+        spear = random.choice(weapons) + " OF " + random.choice(descriptions)
+        spear = spear.upper()
+        url = undyne_url.format(replace = spear)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "battletime.png"))
 
