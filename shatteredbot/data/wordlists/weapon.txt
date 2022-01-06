@@ -122,8 +122,59 @@ pokemon
 the librarian
 socks
 thigh highs
-sword...?
-gun...?
-hammer...?
-axe...?
-potion...?
+wrath
+wall
+motorcycle
+plot
+fan fiction
+lad
+pootis
+army
+fire
+blaster
+helmet
+chestplate
+leggings
+boots
+shield
+headset
+gattling gun
+railgun
+spaceship
+theory
+notebook
+soldering iron
+currency
+dumbell
+chemical
+wire
+bottle
+piano
+avacado
+lotion
+spellbook
+spell
+wand
+cane
+rainbow
+detector
+scrambler
+lore
+soundtrack
+legend
+alarm
+locator
+dispenser
+sandwich
+mask
+disease
+SUV
+sentry
+watch
+bandage
+control panel
+commander
+coconut gun
+crystal
+tail
+simulator

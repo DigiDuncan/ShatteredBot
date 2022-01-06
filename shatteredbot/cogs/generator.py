@@ -11,7 +11,7 @@ from shatteredbot.lib.wordlist import get_wordlist
 logger = logging.getLogger("shatteredbot")
 papyrus_url = "https://www.demirramon.com/gen/undertale_text_box.png?text={prefix}color%3Dorange%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-papyrus&expression=cool&charcolor=ffffff&font=papyrus&asterisk=null&mode=regular"
 sans_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=You%20feel%20like%20you%27re%20going%20to%20have%20a%20color%3Dblue%20{replace}.&box=undertale&boxcolor=ffffff&character=undertale-sans&expression=blue-eye&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
-undyne_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=BEHOLD%2C%20THE%20color=green%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-undyne&expression=funny&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
+undyne_url = "https://www.demirramon.com/gen/undertale_text_box.png?text=BEHOLD%2C%20THE%20color={color}%20{replace}!&box=undertale&boxcolor=ffffff&character=undertale-undyne&expression=funny&charcolor=ffffff&font=determination&asterisk=ffffff&mode=regular"
 
 bads = get_wordlist("bad")
 times = get_wordlist("time")
@@ -89,9 +89,21 @@ class GeneratorCog(commands.Cog):
         if choice == "count":
             await ctx.send(f"There are **{len(weapons) * len(descriptions)}** ways to say \"Spear of Justice\".")
             return
-        spear = random.choice(weapons) + " OF " + random.choice(descriptions)
+        weapon = random.choice(weapons)
+        color = "green"
+        if random.randint(1, 100) == 100:
+            weapon += "...?"
+        if random.randint(1, 100) == 100:
+            weapon = random.choice(["common", "uncommon", "rare", "epic", "legendary", "big", "small", "huge", "tiny", "rusted", "sparkling"]) + " " + weapon
+        if random.randint(1, 4096) == 4096:
+            weapon = "shiny " + weapon
+            color = "purple"
+        description = random.choice(descriptions)
+        if random.randint(1, 100) == 100:
+            description += "-INATOR"
+        spear = weapon + " OF " + description
         spear = spear.upper()
-        url = undyne_url.format(replace = spear)
+        url = undyne_url.format(replace = spear, color = color)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "spear.png"))
 
