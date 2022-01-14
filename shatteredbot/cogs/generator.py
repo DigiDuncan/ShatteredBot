@@ -38,9 +38,9 @@ class GeneratorCog(commands.Cog):
         battlepass = random.choice(battles) + " " + random.choice(passes)
         battlepass = battlepass.title()
         if battlepass == "Battle Pass":
-            await ctx.send("That shit looks like the... Battle... Pass. Huh.")
+            await ctx.reply("That shit looks like the... Battle... Pass. Huh.", mention_author = False)
             return
-        await ctx.send(f"That shit looks like the **{battlepass}**.")
+        await ctx.reply(f"That shit looks like the **{battlepass}.**", mention_author = False)
 
     @commands.command()
     async def badtime(self, ctx, *, choice = ""):
@@ -52,6 +52,14 @@ class GeneratorCog(commands.Cog):
         if badtime == "bad time":
             await ctx.send("https://cdn.discordapp.com/attachments/412692184182161414/891054485579890708/undertale_box_stack.png")
             return
+
+        if choice == "text":
+            await ctx.send(f"You feel like you're going to have a **{badtime}.**")
+            return
+
+        temp = await ctx.reply(f"You feel like you're going to have a **{badtime}.**", mention_author=False)
+        await temp.delete()
+
         url = sans_url.format(replace = badtime)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "badtime.png"))
@@ -59,12 +67,24 @@ class GeneratorCog(commands.Cog):
     @commands.command(
         hidden = True
     )
-    async def badpass(self, ctx):
+    async def badpass(self, ctx, choice = ""):
+        if choice == "count":
+            await ctx.send(f"There are **{len(bads) * len(passes)}** ways to say \"bad pass\".")
+            return
+
         badpass = random.choice(bads + [""]) + " " + random.choice(passes + [""])
         badpass = badpass.upper()
         custom = badpass
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
+
+        if choice == "text":
+            await ctx.send(f"{prefix}{custom}")
+            return
+
+        temp = await ctx.reply(f"{prefix}{custom}", mention_author=False)
+        await temp.delete()
+
         url = papyrus_url.format(prefix = prefix, replace = custom)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "badpass.png"))
@@ -72,12 +92,24 @@ class GeneratorCog(commands.Cog):
     @commands.command(
         hidden = True
     )
-    async def battletime(self, ctx):
+    async def battletime(self, ctx, choice = ""):
+        if choice == "count":
+            await ctx.send(f"There are **{len(battles) * len(times)}** ways to say \"battle time\".")
+            return
+
         battletime = random.choice(battles + [""]) + " " + random.choice(times + [""])
         battletime = battletime.upper()
         custom = battletime
         prefixes = ["THIS SHIT LOOKS LIKE THE ", "YOU FEEL LIKE YOU'RE GOING TO HAVE A "]
         prefix = random.choice(prefixes)
+
+        if choice == "text":
+            await ctx.send(f"{prefix}{custom}")
+            return
+
+        temp = await ctx.reply(f"{prefix}{custom}", mention_author=False)
+        await temp.delete()
+
         url = papyrus_url.format(prefix = prefix, replace = custom)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "battletime.png"))
@@ -103,6 +135,14 @@ class GeneratorCog(commands.Cog):
             description += "-INATOR"
         spear = weapon + " OF " + description
         spear = spear.upper()
+
+        if choice == "text":
+            await ctx.send(f"BEHOLD, THE **{spear}!**")
+            return
+
+        temp = await ctx.reply(f"BEHOLD, THE **{spear}!**", mention_author=False)
+        await temp.delete()
+
         url = undyne_url.format(replace = spear, color = color)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "spear.png"))
