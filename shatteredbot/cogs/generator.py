@@ -19,6 +19,7 @@ battles = get_wordlist("battle")
 passes = get_wordlist("pass")
 weapons = get_wordlist("weapon")
 descriptions = get_wordlist("description")
+englishs = get_wordlist("english")
 
 
 def get_image(url):
@@ -146,6 +147,16 @@ class GeneratorCog(commands.Cog):
         url = undyne_url.format(replace = spear, color = color)
         image = get_image(url)
         await ctx.send("", file = discord.File(image, filename = "spear.png"))
+
+    @commands.command(
+        aliases = ["trap"]
+    )
+    async def springtrap(self, ctx):
+        word = random.choice(englishs)
+        if word.endswith("s") and word[:-1] in englishs:
+            word = word[:-1]
+        word = word.title()
+        await ctx.reply(f"> I always come back...\n**{word}trap** has arisen!", mention_author = False)
 
 
 def setup(bot):
