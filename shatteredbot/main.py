@@ -10,6 +10,7 @@ import discordn
 
 from shatteredbot import __version__
 from shatteredbot.conf import ConfLoadException, conf, load_conf
+from shatteredbot.lib import pokemon
 from shatteredbot.lib.logger import init_logging, BANNER, CMD, LOGIN
 from shatteredbot.lib.utils import truncate
 
@@ -18,6 +19,8 @@ init_logging()
 discordn.patch()
 
 logger = logging.getLogger(__package__)
+
+pokemon.init()
 
 
 class ShatteredBot(Bot):
@@ -53,7 +56,7 @@ def main():
         return
 
     extensions = []
-    cogs = ["admin", "atsomeone", "lore", "generator", "charades", "etc", "quote", "wingdings", "undertale"]
+    cogs = ["admin", "atsomeone", "lore", "generator", "charades", "etc", "pokemon", "quote", "wingdings", "undertale"]
     extension_paths = [f"{__package__}.cogs.{c}" for c in cogs] + [f"{__package__}.extension.{e}" for e in extensions]
 
     # Add a special message to bot status if we are running in debug mode
