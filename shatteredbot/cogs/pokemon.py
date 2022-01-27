@@ -8,6 +8,15 @@ from shatteredbot.lib.pokemon import pokemon
 
 logger = logging.getLogger("shatteredbot")
 
+namemap = {
+    "lad": "kricketot",
+    "umby": "umbreon",
+    "god": "arceus",
+    "arc": "arceus",
+    "taiko": "monferno",
+    "psyrin": "alakazam"
+}
+
 
 class PokemonCog(commands.Cog):
     def __init__(self, bot):
@@ -19,7 +28,10 @@ class PokemonCog(commands.Cog):
     async def pokedex(self, ctx, pkmn: typing.Union[int, str] = None):
         """Pokemaaaaaaaaans"""
         if isinstance(pkmn, str):
-            p = next((m for m in pokemon if m.name.lower() == pkmn.lower()), None)
+            pkmn = pkmn.lower()
+            if pkmn in namemap:
+                pkmn = namemap[pkmn]
+            p = next((m for m in pokemon if m.name.lower() == pkmn), None)
         elif isinstance(pkmn, int):
             p = next((m for m in pokemon if m.natdex == pkmn), None)
         else:
